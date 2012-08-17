@@ -1,0 +1,73 @@
+<!-- vertikale Slideshow -->
+<div id="actions">
+	<a class="prev">&laquo;</a>
+
+	<a class="next">&raquo;</a>
+</div>
+
+<div class="scrollable vertical">
+	<div class="items"><div>
+	<?php $i = 1; ?>
+	<?php foreach($this->images as $image): ?>
+		<?php if($i == 4 || $i == 7 || $i == 11): ?><div><?php endif; ?>
+
+		<?php
+		// set the dimensions according to your layout
+		$imgWidth = $this->imgWidth;
+		$imgHeight = $this->imgHeight;
+
+		// get dimensions of original file
+		$img = 'application/data/media/'.$image->idart.'/'.$image->mediaid.'.'.$image->extension;
+		$imgDim = getimagesize($img);
+
+		if ($imgWidth >= $imgHeight) {
+			// constant width
+			$factor = $imgWidth/$imgDim[0];
+			$imgHeight = round($imgDim[1]*$factor);
+		} else {
+			// constant height
+			$factor = $imgHeight/$imgDim[1];
+			$imgWidth = round($imgDim[0]*$factor);
+		}
+		
+
+		// get alt-text for image
+		$alt = false;
+		if($image->description != '') {
+			$alt = $image->description;
+		} elseif($image->subline != '') {
+			$alt = $image->subline;
+		} elseif($image->name != '') {
+			$alt = $image->name;
+		}
+		?>
+			
+		<div class="item">
+			<img src="/image/<?php echo $imgWidth; ?>/<?php echo $imgHeight; ?>/2/<?php echo $image->idart; ?>/<?php echo $image->filename; ?>" alt="<?php echo $alt; ?>" width="<?php echo $imgWidth; ?>" height="<?php echo $imgHeight; ?>"/>
+			<?php if($alt): ?>
+				<p class="caption"><?php echo $alt; ?></p>
+			<?php endif; ?>
+		</div>
+
+		<?php if($i == 3 || $i == 6 || $i == 9): ?></div><?php endif; ?>
+
+	<?php $i++; ?>
+	<?php endforeach; ?>
+	</div></div>
+</div>
+
+<?php
+if (count($this->images) > 1) {
+Aitsu_Util_Javascript :: add("
+$(function() {
+	$('.scrollable').scrollable({
+		vertical: true,
+		mousewheel: true,
+		circular: true
+	}).autoscroll({
+		interval: 3000
+	});
+});
+");
+}
+?>

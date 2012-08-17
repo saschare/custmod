@@ -1,0 +1,39 @@
+<!-- einfaches Bild im Text -->
+<?php
+$image = $this->images[0];
+
+// set the dimensions according to your layout
+$imgWidth = $this->imgWidth;
+$imgHeight = $this->imgHeight;
+
+if (empty($imgWidth)) {
+	$imgWidth = 180;
+}
+
+// get dimensions of original file
+$img = 'application/data/media/'.$image->idart.'/'.$image->mediaid.'.'.$image->extension;
+$imgDim = getimagesize($img);
+
+if ($imgWidth >= $imgHeight) {
+	// constant width
+	$factor = $imgWidth/$imgDim[0];
+	$imgHeight = round($imgDim[1]*$factor);
+} else {
+	// constant height
+	$factor = $imgHeight/$imgDim[1];
+	$imgWidth = round($imgDim[0]*$factor);
+}
+
+// get alt-text for image
+$alt = $image->filename;
+if($image->description != '') {
+    $alt = $image->description;
+} elseif($image->subline != '') {
+    $alt = $image->subline;
+} elseif($image->name != '') {
+    $alt = $image->name;
+}
+?>
+<?php if($this->layout == 'center'):?><span class="image center"><?php endif; ?>
+<img src="/image/<?php echo $imgWidth; ?>/<?php echo $imgHeight; ?>/2/<?php echo $image->idart; ?>/<?php echo $image->filename; ?>" alt="<?php echo $alt; ?>" width="<?php echo $imgWidth; ?>" height="<?php echo $imgHeight; ?>"<?php if($this->layout == 'left' || $this->layout == 'right'):?> class="image float_<?php echo $this->layout;?>"<?php endif; ?>/>
+<?php if($this->layout == 'center'):?></span><?php endif; ?>

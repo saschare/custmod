@@ -1,0 +1,45 @@
+<!-- Kalender in der Hauptspalte -->
+<div class="news calendar">
+    <?php foreach ($this->items as $index=>$article) : ?>
+    <div class="item<?php if($index == 0):?> first<?php endif ?><?php if($index == count($this->items)-1):?> last<?php endif ?>">
+
+        <?php if(isset($article->image)): ?>
+        <?php if(unserialize($article->setlink)): ?><a href="{ref:idart-<?php echo $article->idart; ?>}"><?php elseif(!empty($article->redirect_url)): ?><a href="<?php if(preg_match("| |", $article->redirect_url)): ?>{ref:<?php echo str_replace(' ', '-', $article->redirect_url); ?>}"><?php else: ?><?php echo $article->redirect_url; ?>" target="_blank"><?php endif; ?><?php endif; ?><img src="/image/168/112/2/<?php echo $article->idart; ?>/<?php echo $article->image; ?>" alt="<?php echo $article->articletitle; ?>"/><?php if(unserialize($article->setlink) OR !empty($article->redirect_url)): ?></a><?php endif; ?>
+        <?php endif; ?>
+
+        <p class="publish date">
+            <?php if(!empty($article->pubfrom)): ?>
+            <?php echo Mereo_Frontend_Util_Text::translateWeekDay(date("D", strtotime($article->pubfrom))); ?>, <?php echo date("j", strtotime($article->pubfrom)); ?>. <?php echo Mereo_Frontend_Util_Text::translateMonthName(date("F", strtotime($article->pubfrom))); ?> <?php echo date("Y", strtotime($article->pubfrom)); ?><?php if(!preg_match("|00:00:00|", $article->pubfrom)): ?> <?php echo date("G:i", strtotime($article->pubfrom)); ?> <?php echo Aitsu_Translate::_("Uhr"); ?><?php endif; ?>
+                <?php if(!empty($article->pubuntil) && $article->pubuntil != $article->pubfrom): ?>
+                 (<?php echo Aitsu_Translate::_("bis"); ?><?php if(date("d.m", strtotime($article->pubuntil)) != date("d.m", strtotime($article->pubfrom))): ?> <?php echo date("j", strtotime($article->pubuntil)); ?>.<?php echo Mereo_Frontend_Util_Text::translateMonthName(date("F", strtotime($article->pubuntil))); ?><?php endif; ?><?php if(!preg_match("|00:00:00|", $article->pubuntil)): ?> <?php echo date("G:i", strtotime($article->pubuntil)); ?><?php endif; ?>)
+                <?php endif; ?>
+            <?php endif; ?>
+        </p>
+
+        <?php if(!empty($article->teasertitle) || !empty($article->articletitle)): ?>
+        <h2 class="title">
+            <?php if(unserialize($article->setlink)): ?><a href="{ref:idart-<?php echo $article->idart; ?>}"><?php endif; ?>
+            <?php if(!empty($article->teasertitle)): ?>
+            <?php echo $article->teasertitle; ?>
+            <?php elseif(!empty($article->articletitle)): ?>
+            <?php echo $article->articletitle; ?>
+            <?php endif; ?>
+            <?php if(unserialize($article->setlink)): ?></a><?php endif; ?>
+        </h2>
+        <?php endif; ?>
+
+        <p>
+            <?php if(!empty($article->summary)): ?>
+            <?php echo nl2br(htmlentities($article->summary, ENT_COMPAT, 'UTF-8')); ?>
+            <br/>
+            <?php endif; ?>
+            <?php if(unserialize($article->setlink)): ?>
+            <a class="more" href="{ref:idart-<?php echo $article->idart; ?>}"><?php echo Aitsu_Translate::_("mehr..."); ?></a>
+            <?php endif; ?>
+            <?php if(!empty($article->redirect_url)): ?>
+                <a class="more" href="<?php if(preg_match("| |", $article->redirect_url)): ?>{ref:<?php echo str_replace(' ', '-', $article->redirect_url); ?>}"><?php echo Aitsu_Translate::_("mehr..."); ?><?php else: ?><?php echo $article->redirect_url; ?>" target="_blank"><?php echo str_replace('http://', '', $article->redirect_url); ?><?php endif; ?></a>
+            <?php endif; ?>
+        </p>
+    </div>
+    <?php endforeach; ?>
+</div>

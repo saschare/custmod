@@ -1,0 +1,29 @@
+<!-- P & DL -->
+<div class="image_list pdl">
+<?php $i = 0; ?>
+<?php foreach($this->items as $index=>$article): ?>
+    <div class="item<?php if($i == 0): ?> first<?php endif; ?>">
+		<?php if(!empty($article->image)): ?>
+			<a href="{ref:idart-<?php echo $article->idart; ?>}" title="<?php echo $article->pagetitle;?>" class="image_container">
+				<img src="/image/150/100/2/<?php echo $article->idart; ?>/<?php echo $article->image; ?>" alt="<?php echo $article->articletitle; ?>" class="float_left"/>
+			</a>
+		<?php endif; ?>
+        <p class="caption">
+            <?php if(!empty($article->pagetitle)): ?><span class="name"><?php echo $article->pagetitle; ?></span><?php endif; ?>
+        </p>
+    </div>
+    <?php $i++; ?>
+<?php endforeach; ?>
+</div>
+
+<?php Aitsu_Util_Javascript::add("
+$(document).ready(function() {
+    $('.image_list .caption').css({top:'130px', opacity:0, display:'none'});
+    $('.image_list a').mouseover(function(){
+        $(this).next('.caption').css({display:'block'}).animate({top:'100px',opacity:1}, 250).children('.name').hide().slideDown(500);
+    })
+    $('.image_list .item').mouseleave(function(){
+        $('.caption').css({opacity:0, top:'80px', display:'none'});
+    });
+});
+"); ?>

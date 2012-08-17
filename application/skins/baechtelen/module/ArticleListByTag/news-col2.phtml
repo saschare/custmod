@@ -1,0 +1,73 @@
+<!-- News in der rechten Spalte mit &Uuml;berblendung -->
+<div class="news">
+	<?php if (count($this->items) > 1): ?>
+		<a class="prev browse left" title="<?php echo Aitsu_Translate::_("zur&uuml;ck"); ?>"></a>
+		<?php if (count($this->items) > 2): ?>
+			<div class="navi">
+			<?php for($i = 0; $i < count($this->items); $i++): ?>
+				<a <?php if($i == 0): ?> class="active"<?php endif; ?> href="#<?php echo $i; ?>"><?php echo $i+1; ?></a>
+			<?php endfor; ?>
+			</div>
+		<?php endif; ?>
+		<a class="next browse right" title="<?php echo Aitsu_Translate::_("weiter"); ?>"></a>
+	<?php endif; ?>
+	<div class="scrollable">
+		<div class="status"></div>
+		<div class="items">
+	<?php foreach ($this->items as $index=>$article) : ?>
+		<div class="item<?php if($index == 0):?> first<?php endif ?><?php if($index == count($this->items)-1):?> last<?php endif ?>">
+			<p class="publish date">
+				<?php if(!empty($article->pubfrom)): ?>
+					<?php echo date("d.m.Y", strtotime($article->pubfrom)); ?>
+				<?php elseif(!empty($article->created)): ?>
+					<?php echo date("d.m.Y", strtotime($article->created)); ?>
+				<?php endif; ?>
+			</p>
+			<?php if(!empty($article->teasertitle) || !empty($article->articletitle)): ?>
+			<h2 class="title">
+				<?php if(unserialize($article->setlink)): ?><a href="{ref:idart-<?php echo $article->idart; ?>}"><?php endif; ?>
+				<?php if(!empty($article->teasertitle)): ?>
+					<?php echo $article->teasertitle; ?>
+				<?php elseif(!empty($article->articletitle)): ?>
+					<?php echo $article->articletitle; ?>
+				<?php endif; ?>
+				<?php if(unserialize($article->setlink)): ?></a><?php endif; ?>
+			</h2>
+			<?php endif; ?>
+			<?php if(isset($article->image)): ?>
+				<?php if(unserialize($article->setlink)): ?><a href="{ref:idart-<?php echo $article->idart; ?>}"><?php endif; ?><img src="/image/168/90/2/<?php echo $article->idart; ?>/<?php echo $article->image; ?>" alt="<?php echo $article->articletitle; ?>"/><?php if(unserialize($article->setlink)): ?></a><?php endif; ?>
+			<?php endif; ?>
+			<p>
+			<?php if(!empty($article->summary)): ?>
+				<?php echo nl2br(htmlentities(Mereo_Frontend_Util_Text::cropStringByWords($article->summary, 220), ENT_COMPAT, 'UTF-8')); ?>
+				<br/>
+			<?php endif; ?>
+			<?php if(unserialize($article->setlink)): ?>
+				<a class="more" href="{ref:idart-<?php echo $article->idart; ?>}"><?php echo Aitsu_Translate::_("mehr..."); ?></a>
+			<?php endif; ?>
+			</p>
+		</div>
+	<?php endforeach; ?>
+		</div>
+	</div>
+</div>
+
+<?php
+if(count($this->items) > 1) {
+	Aitsu_Util_Javascript::add("
+$(document).ready(function() {
+    var maxHeight = 0;
+    $('.items .item').each(function(){
+        var thisHeight = $(this).height();
+        maxHeight = Math.max(thisHeight, maxHeight);
+    });
+	$('.scrollable').scrollable({circular: true, mousewheel: true, speed: 750}).navigator().autoscroll({interval: 5000}).height(maxHeight + 100);
+	$('.item').mouseenter(function(){
+		$('.status').stop().fadeIn(350);
+	}).mouseleave(function(){
+		$('.status').stop().fadeOut(250);
+	});
+});
+	");
+}
+?>
