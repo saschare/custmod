@@ -1,1 +1,6 @@
-<a href="<?php echo $this->href; ?>"<?php if(!empty($this->title)): ?> title="<?php echo $this->title; ?>"<?php endif; ?><?php if(!empty($this->target)): ?> target="<?php echo $this->target; ?>"<?php endif; ?>><?php echo $this->text; ?></a>
+<!-- einfacher Link (Standard) -->
+<?php if(!empty($this->link)): ?>
+<a href="<?php echo $this->link; ?>"<?php if(!empty($this->target)): ?> target="<?php echo $this->target; ?>"<?php endif; ?><?php if(!empty($this->title)): ?> title="<?php echo $this->title; ?>"<?php endif; ?>><?php echo $this->name; ?></a>
+<?php elseif(!empty($this->name)): ?>
+<span<?php if(!empty($this->title)): ?> title="<?php echo $this->title; ?>"<?php endif; ?> class="error"><?php echo $this->name; ?></span>
+<?php endif; ?>
