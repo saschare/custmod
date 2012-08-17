@@ -16,6 +16,13 @@ class Skin_Module_ArticleListByTag_Class extends Aitsu_Module_Abstract {
     
 	protected function _main() {
 
+        $output = '';
+
+        if ($this->_get('ArticleListByTag_' . $this->_index, $output)) {
+            $data = unserialize($output);
+            return $data->view->render($data->template . '.phtml');
+        }
+
         $this->_params->listTemplate = Aitsu_Content_Config_Radio :: set($this->_index, 'template', '', $this->_getTemplates(), Aitsu_Translate::_('Template'));
 		$this->_params->limit = Aitsu_Content_Config_Text :: set($this->_index, 'numItems', Aitsu_Translate::_("Anzahl Artikel"), Aitsu_Translate::_('Artikelliste nach Tags'));
         $this->_params->period = Aitsu_Content_Config_Select :: set($this->_index, 'period', Aitsu_Translate::_("Zeitfenster"), array(Aitsu_Translate::_("jetzt gueltige Artikel")=>'now', Aitsu_Translate::_("vergangene Artikel")=>'past'), Aitsu_Translate::_('Artikelliste nach Tags'));
@@ -106,20 +113,18 @@ class Skin_Module_ArticleListByTag_Class extends Aitsu_Module_Abstract {
 		}
 
 		$view = $this->_getView();
-
 		$view->items = $articles;
+
+        $this->_save(serialize((object)array (
+            'view' => $view,
+            'template' => $this->_params->template
+        )), 60 * 15);
 
 		$output = $view->render($this->_params->template.'.phtml');
 
 		if (Aitsu_Application_Status :: isEdit() ) {
 			$output = '// '.Aitsu_Translate::_("Liste konfigurieren").' //'.$output;
 		}
-
 		return $output;
 	}
-
-    protected function _cachingPeriod() {
-        return 60*15;
-    }
-
 }
