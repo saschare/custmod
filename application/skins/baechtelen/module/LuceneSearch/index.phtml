@@ -1,0 +1,18 @@
+<?php if (count($this->results) > 0) : ?>
+<p><?php echo sprintf(Aitsu_Translate::_("Ihre Suche nach %s ergab folgende Treffer"), '<strong>'.$_POST['searchterm'].'</strong>'); ?>.</p>
+<dl class="searchResults">
+<?php foreach ($this->results as $pos => $result) : ?>
+	<dt>
+		<a href="{ref:idart-<?php echo $result->idart; ?>}?searchterm=<?php echo urlencode(str_replace('*', '', $_POST['searchterm'])); ?>">
+			<?php $position = $pos + 1; echo $position . '. ' . $result->pagetitle; ?>
+		</a>
+	</dt>
+	<dd>
+		<?php echo $result->summary; ?><br/>
+		<span class="score"><?php echo Aitsu_Translate::_("Treffergenauigkeit:"); ?> <?php echo round($result->score*100); ?>%</span>
+	</dd>
+<?php endforeach; ?>
+<dl class="searchResults">
+<?php else : ?>
+<p><?php echo sprintf(Aitsu_Translate::_("Ihre Suche nach %s ergab leider keine Treffer"), '<strong>'.$_POST['searchterm'].'</strong>'); ?>.</p>
+<?php endif; ?>

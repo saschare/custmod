@@ -1,0 +1,23 @@
+<!-- Downloads -->
+<?php
+$tagvalue = '';
+?>
+<?php foreach ($this->items as $index=>$file) : ?>
+    <?php if($file->tagvalue != $tagvalue): ?>
+        <h2><?php echo $file->tagvalue; ?></h2>
+        <ul class="files downloads">
+    <?php elseif($index == 0): ?>
+        <ul class="files downloads">
+    <?php endif; ?>
+            <li>
+                <a target="_blank" title="<?php echo $file->subline; ?>" href="/file/<?php echo $file->idart; ?>/<?php echo $file->filename; ?>" /><?php echo $file->name; ?></a> [<?php echo strtoupper($file->extension); ?>, <?php echo Mereo_Util_File::formatBytes($file->size); ?>]
+            </li>
+    <?php if($this->items[$index+1]->tagvalue != $file->tagvalue || $index+1 == count($this->items)): ?>
+        </ul>
+    <?php endif; ?>
+        
+    <?php
+    $tagvalue = $file->tagvalue;
+    $i++;
+    ?>
+<?php endforeach; ?>

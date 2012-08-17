@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+<script type="application/x-aitsu" src="Template:head">
+	defaultTemplate = templates/head.phtml
+</script>
+<!--
+this website has been created by Mereo GmbH - www.mereo.ch
+using the open source cms framework aitsu - www.aitsu.org
+-->
+</head>
+<script type="application/x-aitsu" src="BodyTag"></script>
+<ul id="skiplinks">
+	<li><a class="skip" href="#mainnav">Zur Hauptnavigation springen (Eingabetaste dr&uuml;cken).</a></li>
+	<li><a class="skip" href="#subnav">Zur Unternavigation springen (Eingabetaste dr&uuml;cken).</a></li>
+	<li><a class="skip" href="#servicenav">Zur Servicenavigation springen (Eingabetaste dr&uuml;cken).</a></li>
+	<li><a class="skip" href="#col1">Zum Hauptinhalt springen (Eingabetaste dr&uuml;cken).</a></li>
+</ul>
+<div class="page_margins">
+  <div class="page">
+  	<div id="header">
+      <script type="application/x-aitsu" src="HeaderImage:1"></script>
+      <div id="tools" role="contentinfo">
+      	<form action="/suchergebnis/" method="post" name="search"><input type="text" name="searchterm" id="searchterm" value="suchen"/></form>
+        <!-- LuceneStopContentStart -->
+		<script type="application/x-aitsu" src="Navigation:Service">
+			idcat = 29
+			template = servicenav
+		</script>
+	    <!-- LuceneStopContentEnd -->
+      </div>
+      <h1 id="logo" title="Stiftung B&auml;chtelen - Ausbildung &middot; Begleitung &middot; Integration"><a href="/" title="zur Startseite der Stiftung B&auml;chtelen"><img src="/skin/images/logo-baechtelen-print.png" alt="Stiftung B&auml;chtelen - Ausbildung &middot; Begleitung &middot; Integration" class="print"/></a></h1>
+        <!-- LuceneStopContentStart -->
+		<script type="application/x-aitsu" src="Navigation:Main">
+			idcat = 1
+			template = mainnav
+		</script>
+	    <!-- LuceneStopContentEnd -->
+	</div>
+		<script type="application/x-aitsu" src="Template:Main1">
+			defaultTemplate = 2cols
+
+			template.2cols.name = B&uuml;hne & rechte Spalte (Standard)
+			template.2cols.file = templates/maincontent/col1col2.phtml
+
+			template.1col.name = B&uuml;hne auf ganze Breite
+			template.1col.file = templates/maincontent/col1.phtml
+		</script>
+    <div id="footer" role="contentinfo"><!-- @todo: eventually remove footer --></div>
+  </div>
+</div>
+<?php
+
+if(strlen($_GET['searchterm']) > 0){
+	$searchterm = urldecode($_GET['searchterm']);
+
+	Aitsu_Util_Javascript :: add("
+$(document).ready(function() {
+	var st = '".$searchterm."';
+	var stArr = st.split(' ');
+
+	$(stArr).each(function(){
+		$('#main').not('#col3').highlight(this, 1, 'searchmatch');
+	});
+});
+	");
+}
+
+Aitsu_Util_Javascript :: add("
+$(document).ready(function() {
+	$('ul.ischild').hide().slideDown('400');
+	$('ul.issubchild').hide().fadeIn('750');
+
+	$('#searchterm').focus(function() {
+		var foo = $(this).val();
+		if (foo == 'suchen') {
+			$(this).val('');
+		}
+	}).blur(function() {
+		var foo = $(this).val();
+		if (foo == '') {
+			$(this).val('suchen');
+		}
+	});
+
+	var col1Height = $('#col1_content').height();
+	var col3Height = $('#col3_content').height();
+	var contentHeight = Math.max(col3Height, col1Height);
+	$('#col3_content').height(contentHeight);
+});
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-25400374-1']);
+_gaq.push(['_setDomainName', 'none']);
+_gaq.push(['_setAllowLinker', true]);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+");
+?>
+</body>
+</html>

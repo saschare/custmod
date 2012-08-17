@@ -1,0 +1,20 @@
+<!-- Datei-Auflistung mit / getrennt -->
+<?php
+$i = 1;
+foreach($this->images as $file): ?>
+	<?php
+	// get title-text for file
+	$name = $file->filename;
+	if($file->description != '') {
+		$name = $file->description;
+	} elseif($file->subline != '') {
+		$name = $file->subline;
+	} elseif($file->name != '') {
+		$name = $file->name;
+	}
+	?>
+	<a href="/file/download/<?php echo $file->idart; ?>/<?php echo $file->filename; ?>" title="<?php echo $name; ?>"><?php echo $name; ?></a>
+    <?php if (count($this->images) > 1 && $i < count($this->images)): ?> / <?php endif; ?>
+<?php
+$i++;
+endforeach; ?>

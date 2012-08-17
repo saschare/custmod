@@ -1,0 +1,55 @@
+<?php 
+include_once('class.m_dynamic_font_image.php');
+$img = new m_dynamic_font_image();
+
+$imagePath = 'images/nav/'.Aitsu_Registry::get()->config->contenido->client.'/'.Aitsu_Registry :: get()->env->idlang.'/';
+$serverPath = 'application/skins/baechtelen/corporatebree/';
+
+if ( !is_dir($serverPath.$imagePath) ) {
+	mkdir($serverPath.$imagePath);
+}
+
+$img->set_image_path($serverPath.$imagePath);
+
+$img->set_background_color('FFFFFF');
+$img->set_text_color('333333');
+$img->set_fontfile('fonts/BreeLight.ttf');
+?>
+<ul id="mainnav">
+   <?php foreach (array_values($this->nav->getChildren()) as $index => $mainNav) : ?>
+   <?php 
+   	$img->set_background_color('FFFFFF');
+	$img->set_text_color('333333');
+   ?>
+   <li<?php if (($mainNav->isparent OR $mainNav->iscurrent) && $mainNav->getConfig('background-color') != '') : ?><?php $img->set_background_color($mainNav->getConfig('background-color')); ?><?php endif; ?><?php if (($mainNav->isparent OR $mainNav->iscurrent) && $mainNav->getConfig('text-color') != '') : ?><?php $img->set_text_color($mainNav->getConfig('text-color')) ?><?php endif; ?><?php if ($index == 0 && $index != count($this->nav->getChildren())-1) : ?> class="first"<?php endif; ?><?php if ($index == count($this->nav->getChildren())-1 && $index != 0) : ?> class="last"<?php endif; ?><?php if ($index == 0 && $index == count($this->nav->getChildren())-1) : ?> class="first last"<?php endif; ?>>
+	<?php
+   	$img->set_fontfile('fonts/BreeLight.ttf');
+	$img->set_fontsize(13);
+	$img->set_image_height(30);
+	$img->set_marginX(2);
+	$img->set_marginY(6);
+	?>   
+      <?php if (!$mainNav->isparent && $mainNav->iscurrent && count($mainNav->getChildren()) == 0) : ?><strong><?php $img->set_fontfile('fonts/BreeExtrabold.ttf') ?><?php endif; ?><?php if ((count($mainNav->getChildren()) > 0 && $mainNav->iscurrent) || $mainNav->isparent) : ?><em><?php $img->set_fontfile('fonts/BreeExtrabold.ttf') ?><?php endif; ?>
+      <a <?php if($mainNav->getConfig('target') == '_blank') : ?> target="_blank"<?php endif; ?> href="front_content.php?idcat=<?php echo $mainNav->getIdcat(); ?>"><?php echo '<img src="/skin/'.str_replace($serverPath, '',$img->get_fontimage($mainNav->name)).'" alt="'.$mainNav->name.'" />'; ?></a>
+      <?php if (!$mainNav->isparent && $mainNav->iscurrent && count($mainNav->getChildren()) == 0) : ?></strong><?php endif; ?><?php if ((count($mainNav->getChildren()) > 0 && $mainNav->iscurrent) || $mainNav->isparent) : ?></em><?php endif; ?>
+      <?php if (count($mainNav->getChildren()) > 0 && ($mainNav->iscurrent OR $mainNav->isparent) && $mainNav->name != 'Home') : ?>
+      <ul style="background-color:#<?php echo $mainNav->getConfig('background-color'); ?>;"<?php if (count($mainNav->getChildren()) > 0 && $mainNav->iscurrent && !$mainNav->isparent) : ?> class="ischild"<?php endif; ?>>
+      <?php foreach (array_values($mainNav->getChildren()) as $index=>$subNav) : ?>
+         <li<?php if ($index == 0 && $index != count($mainNav->getChildren())-1) : ?> class="first"<?php endif; ?><?php if ($index == count($mainNav->getChildren())-1 && $index != 0) : ?> class="last"<?php endif; ?><?php if ($index == 0 && $index == count($mainNav->getChildren())-1) : ?> class="first last"<?php endif; ?>>
+         <?php
+         $img->set_fontfile('fonts/BreeLight.ttf');
+         $img->set_fontsize(11);
+         $img->set_image_height(23);
+		 $img->set_marginX(2);
+		 $img->set_marginY(5);
+		 ?>	
+         <?php if (!$subNav->isparent && $subNav->iscurrent && count($subNav->getChildren()) == 0) : ?><strong><?php $img->set_fontfile('fonts/BreeExtrabold.ttf') ?><?php endif; ?><?php if ((count($subNav->getChildren()) > 0 && $subNav->iscurrent) || $subNav->isparent) : ?><em><?php $img->set_fontfile('fonts/BreeExtrabold.ttf') ?><?php endif; ?>
+         <a <?php if($subNav->getConfig('target') == '_blank') : ?> target="_blank"<?php endif; ?> href="front_content.php?idcat=<?php echo $subNav->getIdcat(); ?>"><?php echo '<img src="/skin/'.str_replace($serverPath, '',$img->get_fontimage($subNav->name)).'" alt="'.$subNav->name.'" />'; ?></a>
+         <?php if (!$subNav->isparent && $subNav->iscurrent && count($subNav->getChildren()) == 0) : ?></strong><?php endif; ?><?php if ((count($subNav->getChildren()) > 0 && $subNav->iscurrent) || $subNav->isparent) : ?></em><?php endif; ?>
+         </li>
+      <?php endforeach; ?>
+      </ul>
+      <?php endif; ?>
+   </li>
+   <?php endforeach; ?>
+</ul>

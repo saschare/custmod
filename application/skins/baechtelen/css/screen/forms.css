@@ -1,0 +1,98 @@
+@charset "UTF-8";
+@media screen, projection
+{
+    .yform {
+        background: #FFF;
+        border: none;
+        margin: 0 0 1em 0;
+        padding: 0;
+    }
+
+    .yform fieldset {
+        border: none;
+        background: transparent;
+        margin: 0 0 1em 0;
+        padding: 0.5em 0;
+    }
+
+    .yform legend {
+        font-size:125%;
+        font-weight:normal;
+        color:#000;
+    }
+
+    .yform label { color:#333; margin: 0 0 0.25em 0; }
+
+    .yform input,
+    .yform textarea,
+    .yform select,
+    .yform optgroup { font-family:Arial, Helvetica, sans-serif; /* proportional fonts for all form elements */ }
+
+    .yform .type-text input,
+    .yform .type-text textarea,
+    .yform .type-select select { border: none; background: #EEE; }
+
+    .yform .type-text textarea {height: 10em;}
+
+    .yform div.type-text input:focus,
+    .yform div select:focus,
+    .yform div textarea:focus,
+    .yform div.type-text input:hover,
+    .yform div select:hover,
+    .yform div textarea:hover,
+    .yform div.type-text input:active,
+    .yform div select:active,
+    .yform div textarea:active,
+    .yform .type-text.error input,
+    .yform .type-text.error textarea,
+    .yform .type-select.error select { border:  none; background: #DDD; }
+
+    .yform .type-text.error input,
+    .yform .type-text.error textarea,
+    .yform .type-select.error select { border:  none; background: #EDD; }
+
+    .yform .type-button input,
+    .yform .type-button input[type=reset],
+    .yform .type-button input[type=submit],
+    .yform .type-button input.reset,
+    .yform .type-button input.submit {
+        border:  none;
+        color:#FFF;
+        background:#000;
+        padding:3px 1em;
+    }
+
+    .yform div.type-button input:hover,
+    .yform div.type-button input.reset:hover,
+    .yform div.type-button input.submit:hover {
+        border: none;
+        color:#000;
+        background:#DDD;
+    }
+    .yform div.type-button input:focus,
+    .yform div.type-button input:active,
+    .yform div.type-button input.reset:focus,
+    .yform div.type-button input.reset:active,
+    .yform div.type-button input.submit:focus,
+    .yform div.type-button input.submit:active { background: #DEDEDE; color: #FFF; }
+
+    .yform div.type-text,
+    .yform div.type-select,
+    .yform div.type-check,
+    .yform div.type-button { padding-left: 0; padding-right: 0; }
+
+    .yform .type-select select { padding:0.3em 2px 0.3em 1px; }
+
+    .yform #ZipCityWrapper {padding: 0; white-space: nowrap;}
+    .yform #ZipCityWrapper #plz {float: left; width: 15%; margin-right: 22px;}
+    .yform #ZipCityWrapper #ort {width: 75%;}
+
+    .yform div.error {
+        border: none;
+        background: transparent;
+        padding:0;
+    }
+
+    .yform div.error label { color:#000; font-weight:bold; }
+    .yform div.error .message { color:#666; margin-top: 1em; }
+}
