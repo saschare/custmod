@@ -2,89 +2,67 @@
 
 
 /**
- * ArticleAuthor - shortCode.
- * 
- * @author Conrad Leu, Mereo GmbH
- * @copyright Copyright &copy; 2010, Mereo GmbH
- * 
+ * @author Andreas Kummer, w3concepts AG
+ * @copyright Copyright &copy; 2011, w3concepts AG
+ * @modified Conrad Leu, Mereo GmbH
+ * @lastModification added media-selection to link to
+ * @version 1.0.2
  */
+class Skin_Module_Link_Class extends Aitsu_Module_Abstract {
 
-class Skin_Module_Link_Class extends Aitsu_Ee_Module_Abstract {
+    protected $_isBlock = false;
 
-	public static function about() {
+    protected function _main() {
 
-		return (object) array (
-			'name' => 'link to an internal or external page',
-			'description' => Zend_Registry :: get('Zend_Translate')->translate('lets the user select an internal or enter an external link'),
-			'type' => 'Content',
-			'author' => (object) array (
-				'name' => 'Conrad Leu',
-				'copyright' => 'Mereo GmbH'
-			),
-			'version' => '1.0.0',
-			'status' => 'stable',
-			'url' => null,
-			'id' => '4d62f432-ebe8-45fe-b41f-693653f3381f'
-		);
-	}
+        $view = $this->_getView();
 
-	public static function init($context) {
+        $view->name = Aitsu_Content_Config_Text :: set($this->_index, 'name', Aitsu_Translate::_("Name"), Aitsu_Translate::_("Link"));
+        $view->link = Aitsu_Content_Config_Link :: set($this->_index, 'link', Aitsu_Translate::_("Link"), Aitsu_Translate::_("Link"));
+        $view->title = Aitsu_Content_Config_Text :: set($this->_index, 'title', Aitsu_Translate::_("Link-Titel"), Aitsu_Translate::_("Link"));
 
-		$instance = new self();
+        // set media to link to
+        $media2link = Aitsu_Content_Config_Media :: set($this->_index, 'media2link', Aitsu_Translate::_("Medium f&uuml;r Verlinkung w&auml;hlen (optional)"));
+        $media2link = Aitsu_Persistence_View_Media :: byFileName(Aitsu_Registry :: get()->env->idart, $media2link);
 
-		Aitsu_Content_Edit :: isBlock(false);
+        $targets = array (
+            '_blank' => '_blank',
+            '_top' => '_top',
+            '_self' => '_self',
+            '_parent' => '_parent'
+        );
+        $view->target = Aitsu_Content_Config_Select :: set($this->_index, 'target', 'Target', $targets, 'Link');
 
-		$output = '';
-		if ($instance->_get('Link_' . $context['index'], $output)) {
-			return $output;
-		}
-
-		$index = empty ($context['index']) ? 'noindex' : $context['index'];
-		$params = Aitsu_Util :: parseSimpleIni($context['params']);
-
-		$linkText = Aitsu_Content_Config_Text :: set($index, 'text', Aitsu_Translate::_("Link-Text"), Aitsu_Translate::_("allgemeine Angaben zum Link"));
-
-		$externalLink = Aitsu_Content_Config_Text :: set($index, 'externalLink', Aitsu_Translate::_("externer Link"), Aitsu_Translate::_("externer Link"));
-		$target = Aitsu_Content_Config_Select :: set($index, 'target', Aitsu_Translate::_("Zielfenster"), array(Aitsu_Translate::_("gleiches Fenster")=>'_self',  Aitsu_Translate::_("neues Fenster")=>'_blank'), Aitsu_Translate::_("externer Link"));
-
-		$internalLink = Aitsu_Content_Config_Link :: set($index, 'internalLink', Aitsu_Translate::_("interner Link"), Aitsu_Translate::_("interner Link"));
-
-        $link = 'javascript:void(0);';
-        if (!empty($externalLink)) {
-            $protocol = '';
-            if (!preg_match("|http://|", $externalLink)){
-                $protocol = 'http://';
+        $template = Aitsu_Content_Config_Radio :: set($this->_index, 'MediaTemplate', '', $this->_getTemplates(), Aitsu_Translate::_("Template (Art der Darstellung/Auflistung)"));
+        if (empty($template)) {
+            if (isset($this->_params->template)) {
+                $template = $this->_params->template;
+            } else {
+                $template = 'index';
             }
-            $link = $protocol.$externalLink;
-        }
-        if (!empty($internalLink)) {
-            $link = '{ref:'.str_replace(' ', '-', $internalLink).'}';
         }
 
-		if (!isset($params->template)) {
-			$params->template = 'index';
-		}
-		if (empty($linkText)) {
-            $linkText = $context['index'];
-			//$linkText = Aitsu_Translate::_("Link bearbeiten");
-		}
-
-		$view = $instance->_getView();
-
-        if (Aitsu_Application_Status::isEdit()) {
-            $linkText = $linkText.' // '.Aitsu_Translate::_("Link bearbeiten").' //';
+        // set wheter it's a link to a category or article
+        if (strpos($view->link, 'idcat') !== false || strpos($view->link, 'idart') !== false) {
+            $view->link = str_replace(' ', '-', $view->link);
+            $view->link = '{ref:' . $view->link . '}';
+        }
+        // or set link to media
+        if (!empty($media2link)) {
+            $view->link = '/file/download/' . $media2link[0]->idart . '/' . $media2link[0]->filename;
+        }
+        // check if link is an email
+        if (Aitsu_Util_Validator::isEmail($view->link)) {
+            $view->link = 'mailto:'.$view->link;
         }
 
-        $view->text = $linkText;
-        $view->href = $link;
-        $view->target = $target;
+        if (preg_match("|www.|", $view->link) && !preg_match("#(http://|https://)#", $view->link)) {
+            $view->link = 'http://'.$view->link;
+        }
 
-        $view->navTree = $internalLink;
+        return $view->render($template . '.phtml');
+    }
 
-		$output = $view->render($params->template . '.phtml');
-
-		$instance->_save($output, 'eternal');
-
-		return $output;
-	}
+    protected function _cachingPeriod() {
+        return 60 * 60 * 24 * 365;
+    }
 }
