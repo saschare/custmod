@@ -46,7 +46,7 @@ class Skin_Module_Media_Class extends Aitsu_Module_Abstract {
         }
 
         if (!empty($target)) {
-            $this->params->target = $target;
+            $this->_params->target = $target;
         }
 
         $link = false;
