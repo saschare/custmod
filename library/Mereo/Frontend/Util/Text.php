@@ -79,7 +79,7 @@ class Mereo_Frontend_Util_Text {
             return false;
         }
 
-        $month = array(
+        $monthNames = array(
             "January"=>"Januar",
             "February"=>"Februar",
             "March"=>"M&auml;rz",
@@ -93,8 +93,7 @@ class Mereo_Frontend_Util_Text {
             "November"=>"November",
             "December"=>"Dezember"
         );
-
-        return $month[$month];
+        return $monthNames[$month];
     }
 
     /**
@@ -107,7 +106,7 @@ class Mereo_Frontend_Util_Text {
             return false;
         }
 
-        $weDay = array(
+        $week = array(
             "Mon"=>"Montag",
             "Tue"=>"Dienstag",
             "Wed"=>"Mittwoch",
@@ -117,7 +116,7 @@ class Mereo_Frontend_Util_Text {
             "Sun"=>"Sonntag"
         );
 
-        return $weDay[$day];
+        return $week[$day];
     }
 }
 ?>
