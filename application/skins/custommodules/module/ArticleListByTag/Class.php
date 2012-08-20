@@ -6,6 +6,7 @@
  * 
  * @author Conrad Leu, Mereo GmbH
  * @copyright Copyright &copy; 2010, Mereo GmbH
+ * @version 1.0.1
  * 
  */
 
