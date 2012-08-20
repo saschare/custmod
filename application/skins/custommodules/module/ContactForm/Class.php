@@ -10,21 +10,18 @@ class Skin_Module_ContactForm_Class extends Aitsu_Module_Abstract {
 
     protected function _main() {
 
-        $view = $this->_getView();
-
         $redirectTo = Aitsu_Content_Config_Link :: set($this->_index, 'idcat', Aitsu_Translate::_("Danke-Seite w&auml;hlen"), Aitsu_Translate::_("Weiterleitung"));
-		$senderMail = Aitsu_Content_Config_Text :: set($this->_index, 'senderMail', 'Email', 'Sender');
-		$senderName = Aitsu_Content_Config_Text :: set($this->_index, 'senderName', 'Name', 'Sender');
-		$receipientMail = Aitsu_Content_Config_Text :: set($this->_index, 'receipientMail', 'Email', 'Receipient');
-		$receipientName = Aitsu_Content_Config_Text :: set($this->_index, 'receipientName', 'Name', 'Receipient');
-		$subject = Aitsu_Content_Config_Text :: set($this->_index, 'subject', '', 'Subject');
+		$senderMail = Aitsu_Content_Config_Text :: set($this->_index, 'senderMail', Aitsu_Translate::_("E-Mail"), Aitsu_Translate::_("Absender"));
+		$senderName = Aitsu_Content_Config_Text :: set($this->_index, 'senderName', Aitsu_Translate::_("Name"), Aitsu_Translate::_("Absender"));
+		$receipientMail = Aitsu_Content_Config_Text :: set($this->_index, 'receipientMail', Aitsu_Translate::_("E-Mail"), Aitsu_Translate::_("Empf&auml;nger"));
+		$receipientName = Aitsu_Content_Config_Text :: set($this->_index, 'receipientName', Aitsu_Translate::_("Name"), Aitsu_Translate::_("Empf&auml;nger"));
+		$subject = Aitsu_Content_Config_Text :: set($this->_index, 'subject', Aitsu_Translate::_("Betreff"), Aitsu_Translate::_("Betreff"));
 
-        if (!Aitsu_Registry::isEdit()) {
-
-            $fields = (array) $this->_params->field;
+        if (!Aitsu_Registry::isEdit() && Aitsu_Registry::isFront()) {
 
             $cf = Aitsu_Form_Validation :: factory('contactForm');
 
+            $fields = (array) $this->_params->field;
             foreach ($fields as $name => $attr) {
                 $validation = 'NoTags';
                 if (isset ($attr->validation)) {
@@ -39,9 +36,6 @@ class Skin_Module_ContactForm_Class extends Aitsu_Module_Abstract {
                 ), isset ($attr->required) && $attr->required == 1);
             }
 
-            /**
-             * we do this double-processing to be able to validate without effectively sending the form and getting redirected
-             */
             $processor = Mereo_Frontend_Processor_FormPart :: factory();
             $formIsValid = $cf->process($processor);
 
@@ -61,12 +55,13 @@ class Skin_Module_ContactForm_Class extends Aitsu_Module_Abstract {
                     'subject' => $subject
                 )));
             }
-
-            $view->action = Aitsu_Util :: getCurrentUrl();
-            $view->field = $this->_params->field;
-
-            return $view->render($this->_params->template . '.phtml');
         }
-        return;
+
+        $view = $this->_getView();
+
+        $view->action = Aitsu_Util :: getCurrentUrl();
+        $view->field = $this->_params->field;
+
+        return $view->render($this->_params->template . '.phtml');
 	}
 }
