@@ -4,6 +4,8 @@
 /**
  * @author Andreas Kummer, w3concepts AG
  * @copyright Copyright © 2010, w3concepts AG
+ * @modified Conrad Leu, 2012
+ * @version 1.0.1
  */
 
 class Skin_Module_ContactForm_Class extends Aitsu_Module_Abstract {
