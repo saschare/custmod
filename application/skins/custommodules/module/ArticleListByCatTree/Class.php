@@ -1,6 +1,6 @@
 <?php
 /**
- * Artikelliste nach Kategorie mit Option Kind-Kategorien einzubeziehen
+ * article-list by category, with recursive listing of child-categories (configurable option)
  *
  * @author Conrad Leu, Mereo GmbH
  * @copyright Copyright &copy; 2011, Mereo GmbH
@@ -10,6 +10,17 @@
 class Skin_Module_ArticleListByCatTree_Class extends Aitsu_Module_Abstract {
 
     protected $_isVolatile = true;
+
+    protected function _init() {
+        // uncomment this line if you're using a user-configured template
+//        $template = Aitsu_Content_Config_Radio :: set($this->_index, 'template', '', $this->_getTemplates(), 'Template');
+
+        $template = 'index';
+        if(!empty($this->_params->template)) {
+            $template = $this->_params->template;
+        }
+        Aitsu_Util_Javascript::add($this->_getView()->render($template.'.js'));
+    }
 
     protected function _main() {
 
