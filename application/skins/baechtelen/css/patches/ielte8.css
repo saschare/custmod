@@ -1,9 +1,0 @@
-﻿@charset "UTF-8";
-@media screen, projection {
-    #mainnav em,
-    #mainnav strong,
-    .image_list {zoom: 1;}
-    .image_list .item {margin-bottom:1.5em;}
-    .image_list.team .item {margin-bottom:2.9em;}
-    .image_list.team {padding-bottom: 4em;}
-}
